@@ -52,76 +52,73 @@ class ManualAddCamera extends StatelessWidget {
           ),
           // Content
           Positioned.fill(
-            top: kToolbarHeight + 110, // Adjust top position for content
+            top: kToolbarHeight + 50, // Adjust top position for content
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Text(
-                    'Camera Name',
-                    style: TextStyle(
-                      fontFamily: 'Montserrat',
-                      fontSize: 15,
+              child: SingleChildScrollView( // Wrap the Column with SingleChildScrollView
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Text(
+                      'Camera Name',
+                      style: TextStyle(
+                        fontFamily: 'Montserrat',
+                        fontSize: 15,
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 5),
-                  _buildInputField("Camera Name"),
-                  SizedBox(height: 20),
-                  Text(
-                    'IP Address',
-                    style: TextStyle(
-                      fontFamily: 'Montserrat',
-                      fontSize: 15,
+                    SizedBox(height: 5),
+                    _buildInputField("Camera Name"),
+                    SizedBox(height: 20),
+                    Text(
+                      'IP Address',
+                      style: TextStyle(
+                        fontFamily: 'Montserrat',
+                        fontSize: 15,
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 5),
-                  _buildInputField("IP Address"),
-                  SizedBox(height: 20),
-                  Text(
-                    'Username',
-                    style: TextStyle(
-                      fontFamily: 'Montserrat',
-                      fontSize: 15,
+                    SizedBox(height: 5),
+                    _buildInputField("IP Address"),
+                    SizedBox(height: 20),
+                    Text(
+                      'Username',
+                      style: TextStyle(
+                        fontFamily: 'Montserrat',
+                        fontSize: 15,
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 5),
-                  _buildInputField("Username"),
-                  SizedBox(height: 20),
-                  Text(
-                    'Password',
-                    style: TextStyle(
-                      fontFamily: 'Montserrat',
-                      fontSize: 15,
+                    SizedBox(height: 5),
+                    _buildInputField("Username"),
+                    SizedBox(height: 20),
+                    Text(
+                      'Password',
+                      style: TextStyle(
+                        fontFamily: 'Montserrat',
+                        fontSize: 15,
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 5),
-                  _buildInputField("Password", isObscureText: true),
-                ],
-              ),
-            ),
-          ),
-          // Add Camera Button
-          Positioned(
-            left: 20,
-            right: 20,
-            bottom: 200,
-            child: ElevatedButton(
-              onPressed: () {
-                // Add camera logic here
-              },
-              child: Text(
-                'Add Camera',
-                style: TextStyle(
-                    fontSize: 15,
-                    color: Colors.white,
-                    fontFamily: 'Montserrat'),
-              ),
-              style: ElevatedButton.styleFrom(
-                primary: buttonColor,
-                padding: EdgeInsets.symmetric(vertical: 16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
+                    SizedBox(height: 5),
+                    _buildInputField("Password", isObscureText: true),
+                    SizedBox(height: 20),
+                    ElevatedButton( // Add Camera Button
+                      onPressed: () {
+                        // Add camera logic here
+                      },
+                      child: Text(
+                        'Add Camera',
+                        style: TextStyle(
+                            fontSize: 15,
+                            color: Colors.white,
+                            fontFamily: 'Montserrat'),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        primary: buttonColor,
+                        padding: EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
