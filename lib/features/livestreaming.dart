@@ -1,36 +1,49 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ffmpeg/flutter_ffmpeg.dart';
+import 'package:flutter_vlc_player/flutter_vlc_player.dart';
 
-class LiveStreaming extends StatefulWidget {
-  final String rtspUrl;
+class LiveStreamingPage extends StatefulWidget {
+  final Map<String, String> cameraInfo;
 
-  const LiveStreaming({Key? key, required this.rtspUrl}) : super(key: key);
+  LiveStreamingPage({required this.cameraInfo});
 
   @override
-  _LiveStreamingState createState() => _LiveStreamingState();
+  _LiveStreamingPageState createState() => _LiveStreamingPageState();
 }
 
-class _LiveStreamingState extends State<LiveStreaming> {
+class _LiveStreamingPageState extends State<LiveStreamingPage> with WidgetsBindingObserver {
   late FlutterFFmpeg _flutterFFmpeg;
+  late VlcPlayerController _vlcController;
+  late String _rtspUrl;
 
   @override
   void initState() {
     super.initState();
     _flutterFFmpeg = FlutterFFmpeg();
-    _startStreaming();
+    String ip = widget.cameraInfo['ip']!;
+    String username = widget.cameraInfo['username']!;
+    String password = widget.cameraInfo['password']!;
+    _rtspUrl = 'rtsp://$username:$password@$ip:554/stream1';
+    _vlcController = VlcPlayerController.network(_rtspUrl);
+    startStreaming();
   }
 
-  void _startStreaming() async {
-    // Command to start streaming
-    String command = "-rtsp_transport tcp -i ${widget.rtspUrl} -c copy -f flv rtmp://example.com/live/stream";
+  @override
+  void dispose() {
+    _flutterFFmpeg.cancel();
+    _vlcController.dispose();
+    super.dispose();
+  }
 
-    // Execute FFmpeg command
-    int resultCode = await _flutterFFmpeg.execute(command);
+  void startStreaming() async {
+    // Execute FFmpeg command to start streaming
+    int rc = await _flutterFFmpeg.execute(
+        '-rtsp_transport tcp -i $_rtspUrl -c:v copy -c:a aac -f flv -');
 
-    if (resultCode == 0) {
+    if (rc == 0) {
       print('Streaming started successfully');
     } else {
-      print('Failed to start streaming. Error code: $resultCode');
+      print('Error starting streaming');
     }
   }
 
@@ -38,20 +51,15 @@ class _LiveStreamingState extends State<LiveStreaming> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Live Streaming'),
+        title: Text('Live Stream'),
       ),
       body: Center(
-        child: Text(
-          'Live streaming of ${widget.rtspUrl}',
-          style: TextStyle(fontSize: 20),
+        child: VlcPlayer(
+          controller: _vlcController,
+          aspectRatio: 16 / 9,
+          placeholder: Center(child: CircularProgressIndicator()),
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    _flutterFFmpeg.cancel();
-    super.dispose();
   }
 }

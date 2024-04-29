@@ -97,9 +97,8 @@ class _ManuallyAddCameraState extends State<ManuallyAddCamera> {
           TextButton(
             child: Text('OK'),
             onPressed: () {
-              // Close the dialog
               Navigator.pop(context);
-              //Close the addcamera page
+              Navigator.pop(context);
               Navigator.pop(context);
             },
           ),

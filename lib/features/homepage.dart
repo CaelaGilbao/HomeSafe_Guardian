@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'livestreaming.dart';
-import 'manualyaddcamera.dart'; // Import the ManuallyAddCamera screen
 
 class Homepage extends StatefulWidget {
   @override
@@ -67,7 +66,7 @@ Widget buildHomepage() {
       // Background image
       Positioned.fill(
         child: Image.asset(
-          'assets/background.png', 
+          'assets/background.png',
           fit: BoxFit.cover,
         ),
       ),
@@ -125,8 +124,8 @@ Widget buildHomepage() {
         left: 20,
         right: 20,
         child: connectedCameras.isEmpty
-            ? Center(
-                child: CircularProgressIndicator(),
+           ? Center(
+                child: Text('No camera added'),
               )
             : ListView.builder(
                 itemCount: connectedCameras.length,
@@ -141,8 +140,15 @@ Widget buildHomepage() {
 
                   return GestureDetector(
                     onTap: () {
-                      // Handle tapping on camera item
-                    },
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => LiveStreamingPage(
+                          cameraInfo: camera,
+                        ),
+                      ),
+                    );
+                  },
                     child: Card(
                       elevation: 3,
                       margin: EdgeInsets.symmetric(vertical: 8),
