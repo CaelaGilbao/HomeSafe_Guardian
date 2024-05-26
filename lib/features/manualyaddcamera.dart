@@ -8,6 +8,7 @@ class ManuallyAddCamera extends StatefulWidget {
 }
 
 class _ManuallyAddCameraState extends State<ManuallyAddCamera> {
+  TextEditingController _nameController = TextEditingController();
   TextEditingController _ipController = TextEditingController();
   TextEditingController _usernameController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
@@ -27,7 +28,6 @@ class _ManuallyAddCameraState extends State<ManuallyAddCamera> {
     String username = _usernameController.text;
     String password = _passwordController.text;
 
-    // Constructing multiple RTSP URL formats
     List<String> rtspUrls = [
       'rtsp://$username:$password@$ip:554/stream1',
     ];
@@ -63,56 +63,110 @@ class _ManuallyAddCameraState extends State<ManuallyAddCamera> {
     setState(() {
       _cameras = storedCameras
           .map((dynamic item) => {
-                'ip': item['ip'].toString(),
-                'username': item['username'].toString(),
-                'password': item['password'].toString(),
-              })
+        'name': item['name'].toString(),
+        'ip': item['ip'].toString(),
+        'username': item['username'].toString(),
+        'password': item['password'].toString(),
+      })
           .toList();
     });
   }
-  
- Future<void> _saveCamera() async {
-  String ip = _ipController.text;
-  String username = _usernameController.text;
-  String password = _passwordController.text;
 
-  _cameras.add({
-    'ip': ip,
-    'username': username,
-    'password': password,
-  });
+  Future<void> _saveCamera() async {
+    String ip = _ipController.text;
+    String username = _usernameController.text;
+    String password = _passwordController.text;
 
-  final box = GetStorage();
-  await box.write('cameras', _cameras);
-  
-
-  // Show dialog upon successful save
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text('Success'),
-        content: Text('Camera successfully saved!'),
-        actions: <Widget>[
-          TextButton(
-            child: Text('OK'),
-            onPressed: () {
-              Navigator.pop(context);
-              Navigator.pop(context);
-              Navigator.pop(context);
-            },
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            'Name your camera',
+            style: TextStyle(fontFamily: 'Montserrat'),
           ),
-        ],
-      );
-    },
-  );
-}
+          content: TextField(
+            controller: _nameController,
+            decoration: InputDecoration(labelText: 'Camera Name'),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text(
+                'Cancel',
+                style: TextStyle(fontFamily: 'Montserrat'),
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            TextButton(
+              child: Text(
+                'Save',
+                style: TextStyle(fontFamily: 'Montserrat'),
+              ),
+              onPressed: () async {
+                String cameraName = _nameController.text.trim();
+
+                if (cameraName.isEmpty) {
+                  cameraName = 'Camera ${_cameras.length + 1}';
+                }
+
+                _cameras.add({
+                  'name': cameraName,
+                  'ip': ip,
+                  'username': username,
+                  'password': password,
+                });
+
+                final box = GetStorage();
+                await box.write('cameras', _cameras);
+
+                Navigator.pop(context);
+
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text(
+                        'Success',
+                        style: TextStyle(fontFamily: 'Montserrat'),
+                      ),
+                      content: Text(
+                        'Camera successfully saved!',
+                        style: TextStyle(fontFamily: 'Montserrat'),
+                      ),
+                      actions: <Widget>[
+                        TextButton(
+                          child: Text(
+                            'OK',
+                            style: TextStyle(fontFamily: 'Montserrat'),
+                          ),
+                          onPressed: () {
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Manually Add Camera'),
+        title: Text(
+          'Manually Add Camera',
+          style: TextStyle(fontFamily: 'Montserrat'),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -121,21 +175,33 @@ class _ManuallyAddCameraState extends State<ManuallyAddCamera> {
           children: [
             TextField(
               controller: _ipController,
-              decoration: InputDecoration(labelText: 'IP Address'),
+              decoration: InputDecoration(
+                labelText: 'IP Address',
+                labelStyle: TextStyle(fontFamily: 'Montserrat'),
+              ),
             ),
             TextField(
               controller: _usernameController,
-              decoration: InputDecoration(labelText: 'Username'),
+              decoration: InputDecoration(
+                labelText: 'Username',
+                labelStyle: TextStyle(fontFamily: 'Montserrat'),
+              ),
             ),
             TextField(
               controller: _passwordController,
               obscureText: true,
-              decoration: InputDecoration(labelText: 'Password'),
+              decoration: InputDecoration(
+                labelText: 'Password',
+                labelStyle: TextStyle(fontFamily: 'Montserrat'),
+              ),
             ),
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: _testConnection,
-              child: Text('Test Connection'),
+              child: Text(
+                'Test Connection',
+                style: TextStyle(fontFamily: 'Montserrat'),
+              ),
             ),
             SizedBox(height: 20),
             Text(
@@ -144,13 +210,17 @@ class _ManuallyAddCameraState extends State<ManuallyAddCamera> {
                 color: _validationResult.contains('successful')
                     ? Colors.green
                     : Colors.red,
+                fontFamily: 'Montserrat',
               ),
             ),
             SizedBox(height: 20),
             if (_showSaveButton)
               ElevatedButton(
                 onPressed: _saveCamera,
-                child: Text('Save Camera'),
+                child: Text(
+                  'Save Camera',
+                  style: TextStyle(fontFamily: 'Montserrat'),
+                ),
               ),
           ],
         ),
