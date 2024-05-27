@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 class CameraManager {
   static Future<bool> connectToCamera({
     required String ipAddress,
